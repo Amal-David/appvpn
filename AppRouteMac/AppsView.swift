@@ -2,7 +2,8 @@ import SwiftUI
 
 struct AppsView: View {
     let rules: RoutingRules
-    @State private var isAddingApp = false
+    @State private var apps: [InstalledApp] = []
+    @State private var search = ""
 
     var body: some View {
         NavigationStack {
@@ -11,120 +12,121 @@ struct AppsView: View {
                     AppRuleDetailView(rules: rules, bundleID: bundleID)
                 }
         }
+        .task { apps = await Task.detached { InstalledApps.all() }.value }
+    }
+
+    /// Apps with at least one exit, in rule order. A rule whose app is no longer installed still gets a row so it can be removed.
+    private var routed: [InstalledApp] {
+        let installed = Dictionary(uniqueKeysWithValues: apps.map { ($0.bundleID, $0) })
+        return rules.rules
+            .filter { $0.exitIDs.isEmpty == false }
+            .map { installed[$0.bundleID] ?? InstalledApps.app(bundleID: $0.bundleID) ?? InstalledApp(bundleID: $0.bundleID, name: $0.bundleID, url: URL(filePath: "/")) }
+            .filter(matchesSearch)
+    }
+
+    private var direct: [InstalledApp] {
+        let taken = Set(rules.rules.filter { $0.exitIDs.isEmpty == false }.map(\.bundleID))
+        return apps.filter { taken.contains($0.bundleID) == false && matchesSearch($0) }
+    }
+
+    private func matchesSearch(_ app: InstalledApp) -> Bool {
+        search.isEmpty || app.name.localizedCaseInsensitiveContains(search)
     }
 
     private var content: some View {
         VStack(alignment: .leading, spacing: 0) {
-            Label("Rules are saved. They are not enforced until the extension is installed.", systemImage: "info.circle")
+            Label(rules.exits.isEmpty
+                ? "Add an exit in the Exits tab, then choose which apps use it."
+                : "Rules are saved. They are not enforced until the extension is installed.", systemImage: "info.circle")
                 .font(.callout)
                 .foregroundStyle(.secondary)
+                .padding(.horizontal, 20)
+                .padding(.top, 10)
+
+            TextField("Search apps", text: $search)
+                .textFieldStyle(.roundedBorder)
                 .padding(.horizontal, 20)
                 .padding(.vertical, 10)
 
             List {
-                ForEach(rules.rules) { rule in
-                    NavigationLink(value: rule.bundleID) {
-                        AppRuleRow(rules: rules, rule: rule)
+                if routed.isEmpty == false {
+                    Section("Through an exit") {
+                        ForEach(routed) { app in
+                            AppRow(rules: rules, app: app)
+                        }
                     }
                 }
-                .onDelete { rules.rules.remove(atOffsets: $0) }
-            }
-            .overlay {
-                if rules.rules.isEmpty {
-                    ContentUnavailableView("No apps yet", systemImage: "app.dashed", description: Text("Add an app to choose which exit it uses."))
+                Section("Normal connection") {
+                    ForEach(direct) { app in
+                        AppRow(rules: rules, app: app)
+                    }
                 }
             }
-
-            Divider()
-            Button("Add app", systemImage: "plus") { isAddingApp = true }
-                .padding(12)
-        }
-        .sheet(isPresented: $isAddingApp) {
-            AddAppSheet(rules: rules)
         }
     }
 }
 
-private struct AppRuleRow: View {
+private struct AppRow: View {
     let rules: RoutingRules
-    let rule: AppRule
+    let app: InstalledApp
+    @State private var isConfirmingRemoval = false
 
-    private var app: InstalledApp? { InstalledApps.app(bundleID: rule.bundleID) }
-    private var firstExit: Exit? { rule.exitIDs.first.flatMap(rules.exit) }
-
-    private var summary: String {
-        guard let firstExit else { return "No exit: normal connection" }
-        let others = rule.exitIDs.count - 1
-        return others > 0 ? "\(firstExit.name), then \(others) more" : firstExit.name
-    }
+    private var rule: AppRule? { rules.rules.first { $0.bundleID == app.bundleID } }
+    private var firstExit: Exit? { rule?.exitIDs.first.flatMap(rules.exit) }
 
     var body: some View {
         HStack(spacing: 12) {
-            if let app {
-                Image(nsImage: InstalledApps.icon(for: app))
-                    .resizable()
-                    .frame(width: 32, height: 32)
-                    .accessibilityHidden(true)
-            }
+            Image(nsImage: InstalledApps.icon(for: app))
+                .resizable()
+                .frame(width: 28, height: 28)
+                .accessibilityHidden(true)
             VStack(alignment: .leading, spacing: 2) {
-                Text(app?.name ?? rule.bundleID).fontWeight(.medium)
-                Text(summary)
-                    .font(.callout)
-                    .foregroundStyle(.secondary)
+                Text(app.name).fontWeight(.medium)
+                if let rule, rule.exitIDs.count > 1 {
+                    Text("then \(rule.exitIDs.count - 1) more")
+                        .font(.callout)
+                        .foregroundStyle(.secondary)
+                }
             }
             Spacer()
             if let firstExit {
                 ConnectTimeBadge(time: rules.connectTimes[firstExit.id])
             }
-        }
-        .padding(.vertical, 4)
-        .contextMenu {
-            Button("Remove", role: .destructive) { rules.rules.removeAll { $0.id == rule.id } }
-        }
-    }
-}
-
-private struct AddAppSheet: View {
-    let rules: RoutingRules
-    @Environment(\.dismiss) private var dismiss
-    @State private var apps: [InstalledApp] = []
-    @State private var search = ""
-
-    private var matches: [InstalledApp] {
-        let taken = Set(rules.rules.map(\.bundleID))
-        return apps.filter { taken.contains($0.bundleID) == false && (search.isEmpty || $0.name.localizedCaseInsensitiveContains(search)) }
-    }
-
-    var body: some View {
-        VStack(spacing: 0) {
-            TextField("Search apps", text: $search)
-                .textFieldStyle(.roundedBorder)
-                .padding(12)
-            List(matches) { app in
-                Button {
-                    rules.rules.append(AppRule(bundleID: app.bundleID, exitIDs: rules.exits.first.map { [$0.id] } ?? []))
-                    dismiss()
-                } label: {
-                    HStack(spacing: 10) {
-                        Image(nsImage: InstalledApps.icon(for: app))
-                            .resizable()
-                            .frame(width: 24, height: 24)
-                            .accessibilityHidden(true)
-                        Text(app.name)
-                        Spacer()
+            if rules.exits.isEmpty == false || rule != nil {
+                Picker("Exit for \(app.name)", selection: Binding(
+                    get: { firstExit?.id },
+                    set: { exitID in
+                        // Going back to the normal connection deletes the rule, so ask first when it holds more than one choice.
+                        if exitID == nil, let rule, rule.exitIDs.count > 1 || rule.failPolicy != .keepOffline {
+                            isConfirmingRemoval = true
+                        } else {
+                            rules.setPrimaryExit(exitID, for: app.bundleID)
+                        }
                     }
-                    .contentShape(.rect)
+                )) {
+                    Text("Normal connection").tag(UUID?.none)
+                    ForEach(rules.exits) { exit in
+                        Text(exit.name).tag(UUID?.some(exit.id))
+                    }
                 }
-                .buttonStyle(.plain)
+                .labelsHidden()
+                .fixedSize()
             }
-            Divider()
-            Button("Cancel", role: .cancel) { dismiss() }
-                .keyboardShortcut(.cancelAction)
-                .padding(12)
-                .frame(maxWidth: .infinity, alignment: .trailing)
+            NavigationLink(value: app.bundleID) {
+                Image(systemName: "chevron.right")
+            }
+            .buttonStyle(.borderless)
+            .accessibilityLabel("Fallback exits for \(app.name)")
+            .opacity(rule == nil ? 0 : 1)
+            .disabled(rule == nil)
+            .accessibilityHidden(rule == nil)
         }
-        .frame(width: 360, height: 420)
-        .task { apps = await Task.detached { InstalledApps.all() }.value }
+        .padding(.vertical, 2)
+        .confirmationDialog("Put \(app.name) back on the normal connection?", isPresented: $isConfirmingRemoval) {
+            Button("Remove its exits", role: .destructive) { rules.setPrimaryExit(nil, for: app.bundleID) }
+        } message: {
+            Text("Its fallback exits and fail choice will be removed.")
+        }
     }
 }
 

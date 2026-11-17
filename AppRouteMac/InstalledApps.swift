@@ -9,23 +9,29 @@ struct InstalledApp: Identifiable, Hashable {
 }
 
 enum InstalledApps {
+    /// Every app in the standard folders, looking one folder deep so vendor folders and Utilities are included.
     static func all() -> [InstalledApp] {
         let folders = [
             URL(filePath: "/Applications"),
-            URL(filePath: "/Applications/Utilities"),
             URL(filePath: "/System/Applications"),
-            URL(filePath: "/System/Applications/Utilities"),
+            // Safari lives here, not in /Applications, on current macOS.
+            URL(filePath: "/System/Cryptexes/App/System/Applications"),
             URL.homeDirectory.appending(path: "Applications")
         ]
         var seen = Set<String>()
         return folders
-            .flatMap { (try? FileManager.default.contentsOfDirectory(at: $0, includingPropertiesForKeys: nil)) ?? [] }
+            .flatMap(contents)
+            .flatMap { $0.pathExtension == "app" ? [$0] : contents(of: $0) }
             .filter { $0.pathExtension == "app" }
             .compactMap { url in
                 guard let bundleID = Bundle(url: url)?.bundleIdentifier, seen.insert(bundleID).inserted else { return nil }
                 return InstalledApp(bundleID: bundleID, name: name(of: url), url: url)
             }
             .sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
+    }
+
+    private static func contents(of folder: URL) -> [URL] {
+        (try? FileManager.default.contentsOfDirectory(at: folder, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)) ?? []
     }
 
     /// Resolves a rule's bundle ID back to an app, which may have moved or been removed since the rule was made.

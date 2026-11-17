@@ -50,6 +50,20 @@ final class RoutingRules {
         exits.first { $0.id == id }
     }
 
+    /// `nil` puts the app back on the normal connection. An exit already among the app's fallbacks moves to the front.
+    func setPrimaryExit(_ exitID: UUID?, for bundleID: String) {
+        guard let exitID else {
+            rules.removeAll { $0.bundleID == bundleID }
+            return
+        }
+        guard let index = rules.firstIndex(where: { $0.bundleID == bundleID }) else {
+            rules.append(AppRule(bundleID: bundleID, exitIDs: [exitID]))
+            return
+        }
+        rules[index].exitIDs.removeAll { $0 == exitID }
+        rules[index].exitIDs.insert(exitID, at: 0)
+    }
+
     func removeExit(_ id: UUID) {
         exits.removeAll { $0.id == id }
         for index in rules.indices {

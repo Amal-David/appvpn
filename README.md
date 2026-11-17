@@ -23,7 +23,7 @@ The Mac app is being built first because it can keep the promise exactly.
 Mac app, real captures from an unsigned build. The rules shown are saved but **not enforced yet**: enforcing them needs the system extension, which has not been run.
 
 <p>
-<img src="docs/screenshots/mac-apps.jpg" width="420" alt="Apps tab: Safari, Music, TV and Mail each with an assigned exit and a measured connect time, under a line saying rules are saved but not enforced">
+<img src="docs/screenshots/mac-apps.jpg" width="420" alt="Apps tab: every installed app is listed with an exit picker; Safari, Music and TV are assigned exits with measured connect times, the rest stay on the normal connection">
 <img src="docs/screenshots/mac-app-detail.jpg" width="420" alt="Safari's rule: two exits tried in order with connect times and reorder buttons, and a choice between Block and Go direct if every exit fails">
 </p>
 
@@ -48,7 +48,7 @@ Planned iPhone screen. A design mockup, not a screenshot; it does not exist yet.
 - A system extension (`NETransparentProxyProvider`) claims outbound TCP and UDP.
 - Connections made by `curl` (signing identifier `com.apple.curl`, hard-coded) are relayed through one SOCKS5 exit with no authentication. `curl`'s UDP is refused so QUIC cannot leave from your real address. Every other connection is handed back to the system untouched.
 - Both targets compile with no warnings. **The extension has not been run yet**, so none of the routing is verified on a live system.
-- The app lists installed apps, lets you assign each one SOCKS5 exits in order, choose what happens if every exit fails, and shows a measured connect time per exit. These rules are saved to disk and survive a relaunch. The extension does not read them yet.
+- The app finds every installed app and lists it with an exit picker: choose an exit, or leave the app on the normal connection. Per app you can also add fallback SOCKS5 exits in order, choose what happens if every exit fails, and shows a measured connect time per exit. These rules are saved to disk and survive a relaunch. The extension does not read them yet.
 - Not built yet: enforcing the rules, mapping helper processes to their app, credentials, switching exits on failure, WireGuard. DNS still resolves locally.
 
 **iPhone (`AppRoute`, `AppRouteTunnel`)**
