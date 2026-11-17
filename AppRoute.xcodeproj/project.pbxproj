@@ -55,6 +55,7 @@
 		6056EDC3D764D62BFE2C154A /* RuleEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2563EFB9BB45B5D3C17FD46 /* RuleEngine.swift */; };
 		611839458E0083C492440D90 /* InstalledApps.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62A0E8200FB59AD03708999D /* InstalledApps.swift */; };
 		62785F6E65AEE76EA876AE2F /* NordIKEv2ProfileTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE730833215E358548992E41 /* NordIKEv2ProfileTests.swift */; };
+		62D9892ABFC59CD95C99ECD6 /* AppRuleDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D7491CA246090271116FD9E /* AppRuleDetailView.swift */; };
 		6655EAE283550671D2ECFB42 /* ProviderFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5474432FA86AD3678DA6019 /* ProviderFactory.swift */; };
 		68CACBC19A2179D6C9346F98 /* NetworkCIDRTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E9B27A65BEF94A26CFD1661 /* NetworkCIDRTests.swift */; };
 		6AEE7381B74C437E9BC1DB94 /* AppRouteMacApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB62FA50C7FD60168513FD98 /* AppRouteMacApp.swift */; };
@@ -258,6 +259,7 @@
 		8338CEF9DAF013349786A4FE /* ServicePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServicePickerView.swift; sourceTree = "<group>"; };
 		85B138CABD9358D558C090D0 /* NetworkCIDR.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkCIDR.swift; sourceTree = "<group>"; };
 		8B23678E228AAD2D29632510 /* OnboardingStep.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingStep.swift; sourceTree = "<group>"; };
+		8D7491CA246090271116FD9E /* AppRuleDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRuleDetailView.swift; sourceTree = "<group>"; };
 		901B87E1C32044AAA32E0C15 /* CredentialImportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CredentialImportView.swift; sourceTree = "<group>"; };
 		9D692C0A9E39D8386C3CF529 /* AppRouteTunnel.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = AppRouteTunnel.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		9DBE39EEDAED9B79F718973F /* ServiceCatalogTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceCatalogTests.swift; sourceTree = "<group>"; };
@@ -537,6 +539,7 @@
 			isa = PBXGroup;
 			children = (
 				AB62FA50C7FD60168513FD98 /* AppRouteMacApp.swift */,
+				8D7491CA246090271116FD9E /* AppRuleDetailView.swift */,
 				67607EA25669813564134C4E /* AppsView.swift */,
 				6090CF53D7E38036B41C74A8 /* ExitsView.swift */,
 				62A0E8200FB59AD03708999D /* InstalledApps.swift */,
@@ -847,6 +850,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6AEE7381B74C437E9BC1DB94 /* AppRouteMacApp.swift in Sources */,
+				62D9892ABFC59CD95C99ECD6 /* AppRuleDetailView.swift in Sources */,
 				B3C7D12B291933FC6E223BAF /* AppTheme.swift in Sources */,
 				A8116E2F490DA1F3BFDF7C72 /* AppsView.swift in Sources */,
 				92D2DBF03D05D93283BFAB7F /* ExitsView.swift in Sources */,

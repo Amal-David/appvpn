@@ -18,17 +18,16 @@ A VPN is normally all or nothing: turn it on and every app goes through it, incl
 
 The Mac app is being built first because it can keep the promise exactly.
 
-## Where it is heading
-
-A design mockup, not a screenshot. None of these screens exist yet.
-
-<img src="docs/screenshots/planned-design.png" width="900" alt="Planned design: a Mac list of installed apps each assigned an exit, an ordered list of exits with a choice of what happens when all fail, and an iPhone list of services each assigned an exit">
-
 ## Screenshots
 
-Mac proof of concept, the whole interface so far:
+Mac app, real captures from an unsigned build. The rules shown are saved but **not enforced yet**: enforcing them needs the system extension, which has not been run.
 
-<img src="docs/screenshots/mac-window.jpg" width="380" alt="AppRoute Mac window with SOCKS5 exit host and port, a switch to route curl through the exit, and a status line">
+<p>
+<img src="docs/screenshots/mac-apps.jpg" width="420" alt="Apps tab: Safari, Music, TV and Mail each with an assigned exit and a measured connect time, under a line saying rules are saved but not enforced">
+<img src="docs/screenshots/mac-app-detail.jpg" width="420" alt="Safari's rule: two exits tried in order with connect times and reorder buttons, and a choice between Block and Go direct if every exit fails">
+</p>
+
+The exits in these captures are local test proxies on `127.0.0.1`. Connect time is how long a TCP handshake with the exit takes.
 
 iPhone app (interface only):
 
@@ -38,14 +37,19 @@ iPhone app (interface only):
 <img src="docs/screenshots/ios-provider-picker.png" width="240" alt="Provider picker listing NordVPN manual, OpenVPN and WireGuard">
 </p>
 
+Planned iPhone screen. A design mockup, not a screenshot; it does not exist yet.
+
+<img src="docs/screenshots/planned-design.png" width="340" alt="Planned design: an iPhone list of services, each assigned an exit, with everything else on the normal connection">
+
 ## What works today
 
 **Mac (`AppRouteMac`, `AppRouteProxy`)**
 
 - A system extension (`NETransparentProxyProvider`) claims outbound TCP and UDP.
 - Connections made by `curl` (signing identifier `com.apple.curl`, hard-coded) are relayed through one SOCKS5 exit with no authentication. `curl`'s UDP is refused so QUIC cannot leave from your real address. Every other connection is handed back to the system untouched.
-- Both targets compile with no warnings. **The extension has not been run yet**, so none of this is verified on a live system.
-- Not built yet: picking apps, mapping helper processes to their app, credentials, more than one exit, fallback, WireGuard. DNS still resolves locally.
+- Both targets compile with no warnings. **The extension has not been run yet**, so none of the routing is verified on a live system.
+- The app lists installed apps, lets you assign each one SOCKS5 exits in order, choose what happens if every exit fails, and shows a measured connect time per exit. These rules are saved to disk and survive a relaunch. The extension does not read them yet.
+- Not built yet: enforcing the rules, mapping helper processes to their app, credentials, switching exits on failure, WireGuard. DNS still resolves locally.
 
 **iPhone (`AppRoute`, `AppRouteTunnel`)**
 
@@ -56,8 +60,8 @@ iPhone app (interface only):
 ## Roadmap
 
 1. Run the Mac proof signed: `curl` exits through the proxy while Safari does not.
-2. App picker, helper-to-app mapping, credentials in the Keychain.
-3. Several exits per app in order, with health checks and automatic fallback.
+2. Have the extension enforce the saved rules; helper-to-app mapping; credentials in the Keychain.
+3. Health checks and automatic fallback between an app's exits.
 4. WireGuard exit.
 5. Signed, notarised Mac release.
 6. iPhone companion that routes by service.

@@ -67,6 +67,8 @@ final class RoutingRules {
             for await (id, time) in group { times[id] = time }
             return times
         }
+        // A slower run that started before an edit must not overwrite the result for the edited exits.
+        guard exits == self.exits else { return }
         connectTimes = measured
     }
 

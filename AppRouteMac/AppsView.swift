@@ -5,6 +5,15 @@ struct AppsView: View {
     @State private var isAddingApp = false
 
     var body: some View {
+        NavigationStack {
+            content
+                .navigationDestination(for: String.self) { bundleID in
+                    AppRuleDetailView(rules: rules, bundleID: bundleID)
+                }
+        }
+    }
+
+    private var content: some View {
         VStack(alignment: .leading, spacing: 0) {
             Label("Rules are saved. They are not enforced until the extension is installed.", systemImage: "info.circle")
                 .font(.callout)
@@ -14,7 +23,9 @@ struct AppsView: View {
 
             List {
                 ForEach(rules.rules) { rule in
-                    AppRuleRow(rules: rules, rule: rule)
+                    NavigationLink(value: rule.bundleID) {
+                        AppRuleRow(rules: rules, rule: rule)
+                    }
                 }
                 .onDelete { rules.rules.remove(atOffsets: $0) }
             }
@@ -41,6 +52,12 @@ private struct AppRuleRow: View {
     private var app: InstalledApp? { InstalledApps.app(bundleID: rule.bundleID) }
     private var firstExit: Exit? { rule.exitIDs.first.flatMap(rules.exit) }
 
+    private var summary: String {
+        guard let firstExit else { return "No exit: normal connection" }
+        let others = rule.exitIDs.count - 1
+        return others > 0 ? "\(firstExit.name), then \(others) more" : firstExit.name
+    }
+
     var body: some View {
         HStack(spacing: 12) {
             if let app {
@@ -51,7 +68,7 @@ private struct AppRuleRow: View {
             }
             VStack(alignment: .leading, spacing: 2) {
                 Text(app?.name ?? rule.bundleID).fontWeight(.medium)
-                Text(firstExit?.name ?? "No exit: normal connection")
+                Text(summary)
                     .font(.callout)
                     .foregroundStyle(.secondary)
             }
@@ -59,29 +76,11 @@ private struct AppRuleRow: View {
             if let firstExit {
                 ConnectTimeBadge(time: rules.connectTimes[firstExit.id])
             }
-            Picker("Exit", selection: exitSelection) {
-                Text("None").tag(UUID?.none)
-                ForEach(rules.exits) { exit in
-                    Text(exit.name).tag(UUID?.some(exit.id))
-                }
-            }
-            .labelsHidden()
-            .fixedSize()
         }
         .padding(.vertical, 4)
         .contextMenu {
             Button("Remove", role: .destructive) { rules.rules.removeAll { $0.id == rule.id } }
         }
-    }
-
-    private var exitSelection: Binding<UUID?> {
-        Binding(
-            get: { rule.exitIDs.first },
-            set: { newValue in
-                guard let index = rules.rules.firstIndex(where: { $0.id == rule.id }) else { return }
-                rules.rules[index].exitIDs = newValue.map { [$0] } ?? []
-            }
-        )
     }
 }
 
@@ -125,7 +124,7 @@ private struct AddAppSheet: View {
                 .frame(maxWidth: .infinity, alignment: .trailing)
         }
         .frame(width: 360, height: 420)
-        .task { apps = InstalledApps.all() }
+        .task { apps = await Task.detached { InstalledApps.all() }.value }
     }
 }
 
@@ -145,6 +144,7 @@ struct ConnectTimeBadge: View {
 
     private func badge(_ text: String, color: Color) -> some View {
         Text(text)
+            .accessibilityLabel("Connect time: \(text)")
             .font(.caption.weight(.medium))
             .monospacedDigit()
             .padding(.horizontal, 8)

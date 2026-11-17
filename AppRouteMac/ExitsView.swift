@@ -18,6 +18,7 @@ struct ExitsView: View {
                         Spacer()
                         ConnectTimeBadge(time: rules.connectTimes[exit.id])
                         Button("Edit") { editing = exit }
+                            .accessibilityLabel("Edit \(exit.name)")
                     }
                     .padding(.vertical, 4)
                     .contextMenu {
