@@ -71,6 +71,8 @@ targets:
       - path: AppRouteMac
         excludes:
           - "**/*.entitlements"
+      - path: Shared/TunnelFailurePolicy.swift
+      - path: AppRoute/DesignSystem/AppTheme.swift
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: app.harena.AppRoute.Mac

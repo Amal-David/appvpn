@@ -4,10 +4,25 @@ import SwiftUI
 @main
 struct AppRouteMacApp: App {
     @NSApplicationDelegateAdaptor private var delegate: AppDelegate
+    @State private var rules = RoutingRules()
 
     var body: some Scene {
         Window("AppRoute", id: "main") {
-            RoutingView(controller: delegate.controller)
+            TabView {
+                Tab("Apps", systemImage: "square.grid.2x2") { AppsView(rules: rules) }
+                Tab("Exits", systemImage: "arrow.triangle.branch") { ExitsView(rules: rules) }
+                Tab("Proof", systemImage: "hammer") { RoutingView(controller: delegate.controller) }
+            }
+            .frame(width: 520, height: 440)
+            .task {
+                while Task.isCancelled == false {
+                    await rules.measureConnectTimes()
+                    try? await Task.sleep(for: .seconds(30))
+                }
+            }
+            .onChange(of: rules.exits) {
+                Task { await rules.measureConnectTimes() }
+            }
         }
         .windowResizability(.contentSize)
     }
@@ -58,7 +73,6 @@ private struct RoutingView: View {
             }
         }
         .formStyle(.grouped)
-        .frame(width: 380)
     }
 
     private var statusText: String {

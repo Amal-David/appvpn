@@ -30,6 +30,7 @@
 		2ACFADE623D3B32FCD42DAFF /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C19F9F421CC6C01B03F686EF /* NetworkExtension.framework */; };
 		2CDFD539F9004BE679ACF698 /* OnboardingContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C194373C55F25735EE75077B /* OnboardingContainerView.swift */; };
 		2E692DD6EAA8E22F54C3405A /* WireGuardAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7D7C5CA4E3D6C4A66D87247 /* WireGuardAdapter.swift */; };
+		2F82EF60E67B0E04070182FC /* RoutingRules.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AE02AE781C0A2EFD921E7BA /* RoutingRules.swift */; };
 		30150F8319B73A13B19A7DCD /* OnceCompletion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25CF084213A6FA41C4200DA6 /* OnceCompletion.swift */; };
 		378F3FD11734738CC464A198 /* IPProtocolFamily.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68FDD3F5720948C4B7BCC2C3 /* IPProtocolFamily.swift */; };
 		3960B2AC3FD5162A93456EFE /* AppRouteError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C14941154BB9F4E12E4ABA6 /* AppRouteError.swift */; };
@@ -52,6 +53,7 @@
 		5D345D3CD58B25CFCECEDF7E /* AppRouteProxy.systemextension in Embed System Extensions */ = {isa = PBXBuildFile; fileRef = F9044009403247D4A8A7BEF4 /* AppRouteProxy.systemextension */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		5F5DC636DEA9C60DBEBBE4D3 /* NordCredentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2238443513428AB709A039B8 /* NordCredentials.swift */; };
 		6056EDC3D764D62BFE2C154A /* RuleEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2563EFB9BB45B5D3C17FD46 /* RuleEngine.swift */; };
+		611839458E0083C492440D90 /* InstalledApps.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62A0E8200FB59AD03708999D /* InstalledApps.swift */; };
 		62785F6E65AEE76EA876AE2F /* NordIKEv2ProfileTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE730833215E358548992E41 /* NordIKEv2ProfileTests.swift */; };
 		6655EAE283550671D2ECFB42 /* ProviderFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5474432FA86AD3678DA6019 /* ProviderFactory.swift */; };
 		68CACBC19A2179D6C9346F98 /* NetworkCIDRTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E9B27A65BEF94A26CFD1661 /* NetworkCIDRTests.swift */; };
@@ -88,10 +90,12 @@
 		8EF5A866B41A6D2137D4F6BC /* AppRouteConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEFAE9BF97FC68C0411C8863 /* AppRouteConstants.swift */; };
 		919FEB6B710563AA06BF873C /* RoutingPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 645EFEB660C10C3DB53002E4 /* RoutingPolicy.swift */; };
 		92630D4C2D8AE66EF1AA0EF0 /* WireGuardAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7D7C5CA4E3D6C4A66D87247 /* WireGuardAdapter.swift */; };
+		92D2DBF03D05D93283BFAB7F /* ExitsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6090CF53D7E38036B41C74A8 /* ExitsView.swift */; };
 		9381C6435427F0F576282778 /* IKEv2Parameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03DFD623A29007A50AD66F40 /* IKEv2Parameters.swift */; };
 		9EDC2ADA24032F9B18AAED4A /* VPNProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31AB21B55C2695797BBB8E27 /* VPNProvider.swift */; };
 		A192280DBC04E3AFD38415F1 /* OnboardingStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B23678E228AAD2D29632510 /* OnboardingStep.swift */; };
 		A3BC2D08F25F8E2D312D9799 /* VPNProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31AB21B55C2695797BBB8E27 /* VPNProvider.swift */; };
+		A8116E2F490DA1F3BFDF7C72 /* AppsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67607EA25669813564134C4E /* AppsView.swift */; };
 		AAFD9C497BC437016882E16E /* ProviderPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E814178C74B4449F1E89AA /* ProviderPickerView.swift */; };
 		AB5A61BEC8BAEB5BBEEE55DF /* ServiceCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BF7C75835B141D625DDE7BB /* ServiceCatalog.swift */; };
 		AC3CDAAB8036E6F937F65A0D /* NordAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 596ECFF0AD46A58E4EF6C979 /* NordAdapter.swift */; };
@@ -100,6 +104,7 @@
 		B13E173E171EE57011DD840E /* ScreenHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBE440946B23C4BCFE00423 /* ScreenHeader.swift */; };
 		B2331CBDF0DC3AE75186D3CB /* ProductIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 264550A6981D6389BF2ADBA8 /* ProductIdentifier.swift */; };
 		B353722F4B35B731A22BEE4B /* NordExampleServers.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA2DF99C3F6EE3051967A6F9 /* NordExampleServers.swift */; };
+		B3C7D12B291933FC6E223BAF /* AppTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4BE9843A083E8687B9F2808 /* AppTheme.swift */; };
 		B426F7C02D5BE6306B515FDE /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 7D1A4E18265FC9E45829BB10 /* PrivacyInfo.xcprivacy */; };
 		B64FEBA86F1F7506EFA18DAB /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = FBC1249063FA158C4BF3E060 /* PrivacyInfo.xcprivacy */; };
 		B7E677F820107AD17CF42D3F /* CredentialStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 644D435BE4B789095BB545EE /* CredentialStore.swift */; };
@@ -135,6 +140,7 @@
 		E512807B62E66C8AAA2AF970 /* ServiceDefinition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C5D2C12C51E8CBB834719A0 /* ServiceDefinition.swift */; };
 		E522F80363BC4C9EEDB1D9AA /* RuleEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF4D4BE82189243648584406 /* RuleEngineTests.swift */; };
 		E9C6F6836303765F797EC74D /* WireGuardConfigTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5675FA9FF0B54549BB10FE2E /* WireGuardConfigTests.swift */; };
+		ED5964D1F4CD27736D89337B /* TunnelFailurePolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = A461947E8846B2D3FFDA31FF /* TunnelFailurePolicy.swift */; };
 		F0DC13BBF2FF94D7C49171F5 /* IPProtocolFamily.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68FDD3F5720948C4B7BCC2C3 /* IPProtocolFamily.swift */; };
 		F31E7110FD4679B3EF1B6920 /* DiagnosticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E5183F3DF4E7FB2E12EB03F /* DiagnosticsView.swift */; };
 		F33B31A1519B85C6BEB50C9C /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F97D43D9A2C4ADE6018812B /* DashboardView.swift */; };
@@ -205,6 +211,7 @@
 		0A982B1AD73AE4D42BF4C6DF /* PrivacyDisclosureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyDisclosureView.swift; sourceTree = "<group>"; };
 		0C623F88B8DA7F912E04DFDB /* RoutingTestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutingTestView.swift; sourceTree = "<group>"; };
 		142EA13C5E24992482D9E2FB /* VPNEndpoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VPNEndpoint.swift; sourceTree = "<group>"; };
+		1AE02AE781C0A2EFD921E7BA /* RoutingRules.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutingRules.swift; sourceTree = "<group>"; };
 		1C14941154BB9F4E12E4ABA6 /* AppRouteError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRouteError.swift; sourceTree = "<group>"; };
 		1C37AB8393E3A036453D8A50 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1E9B27A65BEF94A26CFD1661 /* NetworkCIDRTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkCIDRTests.swift; sourceTree = "<group>"; };
@@ -229,8 +236,11 @@
 		55DCF30858B58F6D23BE177E /* KeychainClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainClient.swift; sourceTree = "<group>"; };
 		5675FA9FF0B54549BB10FE2E /* WireGuardConfigTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WireGuardConfigTests.swift; sourceTree = "<group>"; };
 		596ECFF0AD46A58E4EF6C979 /* NordAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NordAdapter.swift; sourceTree = "<group>"; };
+		6090CF53D7E38036B41C74A8 /* ExitsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExitsView.swift; sourceTree = "<group>"; };
+		62A0E8200FB59AD03708999D /* InstalledApps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstalledApps.swift; sourceTree = "<group>"; };
 		644D435BE4B789095BB545EE /* CredentialStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CredentialStore.swift; sourceTree = "<group>"; };
 		645EFEB660C10C3DB53002E4 /* RoutingPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutingPolicy.swift; sourceTree = "<group>"; };
+		67607EA25669813564134C4E /* AppsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppsView.swift; sourceTree = "<group>"; };
 		68DAFA2191A1E7CEA2DD286B /* DestinationMatch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DestinationMatch.swift; sourceTree = "<group>"; };
 		68FDD3F5720948C4B7BCC2C3 /* IPProtocolFamily.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPProtocolFamily.swift; sourceTree = "<group>"; };
 		6A4EC4E96C816AA588A335B8 /* WireGuardConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WireGuardConfig.swift; sourceTree = "<group>"; };
@@ -527,7 +537,11 @@
 			isa = PBXGroup;
 			children = (
 				AB62FA50C7FD60168513FD98 /* AppRouteMacApp.swift */,
+				67607EA25669813564134C4E /* AppsView.swift */,
+				6090CF53D7E38036B41C74A8 /* ExitsView.swift */,
+				62A0E8200FB59AD03708999D /* InstalledApps.swift */,
 				772304A73E7B296EC50A0E43 /* ProxyController.swift */,
+				1AE02AE781C0A2EFD921E7BA /* RoutingRules.swift */,
 			);
 			path = AppRouteMac;
 			sourceTree = "<group>";
@@ -833,7 +847,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				6AEE7381B74C437E9BC1DB94 /* AppRouteMacApp.swift in Sources */,
+				B3C7D12B291933FC6E223BAF /* AppTheme.swift in Sources */,
+				A8116E2F490DA1F3BFDF7C72 /* AppsView.swift in Sources */,
+				92D2DBF03D05D93283BFAB7F /* ExitsView.swift in Sources */,
+				611839458E0083C492440D90 /* InstalledApps.swift in Sources */,
 				0B820EA50FBD8D74E343E114 /* ProxyController.swift in Sources */,
+				2F82EF60E67B0E04070182FC /* RoutingRules.swift in Sources */,
+				ED5964D1F4CD27736D89337B /* TunnelFailurePolicy.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
