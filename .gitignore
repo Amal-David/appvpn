@@ -1,0 +1,40 @@
+# Xcode
+DerivedData/
+build/
+*.xcuserstate
+*.xccheckout
+*.xcscmblueprint
+xcuserdata/
+*.moved-aside
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Generated
+AppRoute.xcodeproj/xcuserdata/
+AppRoute.xcodeproj/project.xcworkspace/xcuserdata/
+
+# OS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Secrets — never commit real credentials
+.env
+*.p12
+*.mobileprovision
+AuthKey_*.p8
+Secrets.plist
+*.pem
+*.key
+
+# SwiftPM
+.swiftpm/xcode/package.xcworkspace/contents.xcworkspacedata
+.build/
+
+# Local build output
+.derivedData/
+
+# Agent tooling state
+.claude/

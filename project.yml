@@ -1,0 +1,255 @@
+name: AppRoute
+options:
+  bundleIdPrefix: app.harena
+  deploymentTarget:
+    iOS: "26.0"
+    macOS: "15.0"
+  createIntermediateGroups: true
+  developmentLanguage: en
+  xcodeVersion: "26.0"
+  generateEmptyDirectories: true
+  defaultConfig: Debug
+  groupSortPosition: top
+
+settings:
+  base:
+    SWIFT_VERSION: "6.2"
+    SWIFT_STRICT_CONCURRENCY: complete
+    SWIFT_APPROACHABLE_CONCURRENCY: YES
+    SWIFT_DEFAULT_ACTOR_ISOLATION: nonisolated
+    IPHONEOS_DEPLOYMENT_TARGET: "26.0"
+    TARGETED_DEVICE_FAMILY: "1"
+    SUPPORTS_MACCATALYST: NO
+    SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD: NO
+    MARKETING_VERSION: "1.0.0"
+    CURRENT_PROJECT_VERSION: "1"
+    GENERATE_INFOPLIST_FILE: YES
+    ENABLE_USER_SCRIPT_SANDBOXING: YES
+    CLANG_ENABLE_OBJC_ARC: YES
+    STRING_CATALOG_GENERATE_SYMBOLS: YES
+    ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS: YES
+    CODE_SIGN_STYLE: Automatic
+    CODE_SIGN_IDENTITY: "Apple Development"
+    DEVELOPMENT_TEAM: YOUR_TEAM_ID
+
+schemes:
+  AppRoute:
+    storeKitConfigurationPath: AppRoute/Resources/AppRoute.storekit
+    build:
+      targets:
+        AppRoute: all
+        AppRouteTunnel: all
+        AppRouteTests: [test]
+    run:
+      config: Debug
+      storeKitConfigurationPath: AppRoute/Resources/AppRoute.storekit
+    test:
+      config: Debug
+      targets:
+        - AppRouteTests
+    profile:
+      config: Release
+    analyze:
+      config: Debug
+    archive:
+      config: Release
+  AppRouteMac:
+    build:
+      targets:
+        AppRouteMac: all
+        AppRouteProxy: all
+    run:
+      config: Debug
+    archive:
+      config: Release
+
+targets:
+  AppRouteMac:
+    type: application
+    platform: macOS
+    sources:
+      - path: AppRouteMac
+        excludes:
+          - "**/*.entitlements"
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: app.harena.AppRoute.Mac
+        PRODUCT_NAME: AppRoute
+        MACOSX_DEPLOYMENT_TARGET: "15.0"
+        CODE_SIGN_ENTITLEMENTS: AppRouteMac/AppRouteMac.entitlements
+        DEVELOPMENT_TEAM: YOUR_TEAM_ID
+        ENABLE_HARDENED_RUNTIME: YES
+        INFOPLIST_KEY_CFBundleDisplayName: AppRoute
+        INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.utilities
+    entitlements:
+      path: AppRouteMac/AppRouteMac.entitlements
+      properties:
+        com.apple.developer.system-extension.install: true
+        com.apple.developer.networking.networkextension:
+          - app-proxy-provider
+        com.apple.security.application-groups:
+          - $(TeamIdentifierPrefix)app.harena.AppRoute.Mac
+    dependencies:
+      - target: AppRouteProxy
+        embed: true
+      - sdk: NetworkExtension.framework
+      - sdk: SystemExtensions.framework
+
+  AppRouteProxy:
+    type: system-extension
+    platform: macOS
+    sources:
+      - path: AppRouteProxy
+        excludes:
+          - "**/*.plist"
+          - "**/*.entitlements"
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: app.harena.AppRoute.Mac.Proxy
+        PRODUCT_NAME: $(PRODUCT_BUNDLE_IDENTIFIER)
+        PRODUCT_MODULE_NAME: AppRouteProxy
+        MACOSX_DEPLOYMENT_TARGET: "15.0"
+        INFOPLIST_FILE: AppRouteProxy/Info.plist
+        GENERATE_INFOPLIST_FILE: NO
+        CODE_SIGN_ENTITLEMENTS: AppRouteProxy/AppRouteProxy.entitlements
+        DEVELOPMENT_TEAM: YOUR_TEAM_ID
+        ENABLE_HARDENED_RUNTIME: YES
+        SKIP_INSTALL: YES
+    entitlements:
+      path: AppRouteProxy/AppRouteProxy.entitlements
+      properties:
+        com.apple.developer.networking.networkextension:
+          - app-proxy-provider
+        com.apple.security.app-sandbox: true
+        com.apple.security.network.client: true
+        com.apple.security.network.server: true
+        com.apple.security.application-groups:
+          - $(TeamIdentifierPrefix)app.harena.AppRoute.Mac
+    dependencies:
+      - sdk: NetworkExtension.framework
+    info:
+      path: AppRouteProxy/Info.plist
+      properties:
+        CFBundleDisplayName: AppRoute Proxy
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        CFBundlePackageType: SYSX
+        NSSystemExtensionUsageDescription: AppRoute sends the apps you choose through your proxy or VPN.
+        NetworkExtension:
+          NEMachServiceName: $(TeamIdentifierPrefix)app.harena.AppRoute.Mac.Proxy
+          NEProviderClasses:
+            com.apple.networkextension.app-proxy: $(PRODUCT_MODULE_NAME).TransparentProxyProvider
+  AppRoute:
+    type: application
+    platform: iOS
+    sources:
+      - path: AppRoute
+        excludes:
+          - "**/*.plist"
+          - "**/*.entitlements"
+      - path: Shared
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: app.harena.AppRoute
+        PRODUCT_NAME: AppRoute
+        INFOPLIST_FILE: AppRoute/Info.plist
+        CODE_SIGN_ENTITLEMENTS: AppRoute/AppRoute.entitlements
+        DEVELOPMENT_TEAM: YOUR_TEAM_ID
+        INFOPLIST_KEY_CFBundleDisplayName: AppRoute
+        INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.utilities
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UISupportedInterfaceOrientations: UIInterfaceOrientationPortrait
+    entitlements:
+      path: AppRoute/AppRoute.entitlements
+      properties:
+        com.apple.developer.networking.networkextension:
+          - packet-tunnel-provider
+        com.apple.developer.networking.vpn.api:
+          - allow-vpn
+        com.apple.security.application-groups:
+          - group.app.harena.approute
+        keychain-access-groups:
+          - $(AppIdentifierPrefix)app.harena.approute
+    dependencies:
+      - target: AppRouteTunnel
+        embed: true
+      - sdk: NetworkExtension.framework
+      - sdk: Security.framework
+    info:
+      path: AppRoute/Info.plist
+      properties:
+        CFBundleDisplayName: AppRoute
+        CFBundleShortVersionString: "1.0.0"
+        CFBundleVersion: "1"
+        AppIdentifierPrefix: $(AppIdentifierPrefix)
+        LSRequiresIPhoneOS: true
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+        NSLocalNetworkUsageDescription: AppRoute checks that your chosen VPN endpoint is reachable on the local network path. It does not browse or log destinations.
+        NSAppTransportSecurity:
+          NSAllowsArbitraryLoads: false
+
+  AppRouteTunnel:
+    type: app-extension
+    platform: iOS
+    sources:
+      - path: AppRouteTunnel
+        excludes:
+          - "**/*.plist"
+          - "**/*.entitlements"
+      - path: Shared
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: app.harena.AppRoute.Tunnel
+        PRODUCT_NAME: AppRouteTunnel
+        INFOPLIST_FILE: AppRouteTunnel/Info.plist
+        CODE_SIGN_ENTITLEMENTS: AppRouteTunnel/AppRouteTunnel.entitlements
+        DEVELOPMENT_TEAM: YOUR_TEAM_ID
+        SKIP_INSTALL: YES
+        LD_RUNPATH_SEARCH_PATHS:
+          - $(inherited)
+          - "@executable_path/Frameworks"
+          - "@executable_path/../../Frameworks"
+    entitlements:
+      path: AppRouteTunnel/AppRouteTunnel.entitlements
+      properties:
+        com.apple.developer.networking.networkextension:
+          - packet-tunnel-provider
+        com.apple.security.application-groups:
+          - group.app.harena.approute
+        keychain-access-groups:
+          - $(AppIdentifierPrefix)app.harena.approute
+    dependencies:
+      - sdk: NetworkExtension.framework
+      - sdk: Security.framework
+    info:
+      path: AppRouteTunnel/Info.plist
+      properties:
+        CFBundleDisplayName: AppRoute Tunnel
+        CFBundleShortVersionString: "1.0.0"
+        CFBundleVersion: "1"
+        AppIdentifierPrefix: $(AppIdentifierPrefix)
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.networkextension.packet-tunnel
+          NSExtensionPrincipalClass: $(PRODUCT_MODULE_NAME).PacketTunnelProvider
+
+  AppRouteTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: AppRouteTests
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: app.harena.AppRouteTests
+        DEVELOPMENT_TEAM: YOUR_TEAM_ID
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_HOST: $(BUILT_PRODUCTS_DIR)/AppRoute.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/AppRoute
+        BUNDLE_LOADER: $(TEST_HOST)
+    dependencies:
+      - target: AppRoute
+        embed: false
+    info:
+      path: AppRouteTests/Info.plist
+      properties:
+        CFBundleDisplayName: AppRouteTests
